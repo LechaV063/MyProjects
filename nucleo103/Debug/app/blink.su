@@ -1,0 +1,2 @@
+../app/blink.c:11:7:setup	4	static
+../app/blink.c:14:7:loop	8	static
