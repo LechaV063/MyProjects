@@ -24,7 +24,8 @@ void init_led(GPIO_TypeDef* port, uint16_t pin)
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
-	blinked = ! blinked;
+	if (GPIO_Pin == Button_Pin)
+		blinked = ! blinked;
 }
 
 void loop()
