@@ -53,6 +53,12 @@ default.size.stdout \
 OBJDUMP_LIST += \
 DiscoveryF0.list \
 
+OBJCOPY_HEX += \
+DiscoveryF0.hex \
+
+OBJCOPY_BIN += \
+DiscoveryF0.bin \
+
 
 # All Target
 all: main-build
@@ -76,12 +82,22 @@ DiscoveryF0.list: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
 	@echo 'Finished building: $@'
 	@echo ' '
 
+DiscoveryF0.hex: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-objcopy  -O ihex $(EXECUTABLES) "DiscoveryF0.hex"
+	@echo 'Finished building: $@'
+	@echo ' '
+
+DiscoveryF0.bin: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-objcopy  -O binary $(EXECUTABLES) "DiscoveryF0.bin"
+	@echo 'Finished building: $@'
+	@echo ' '
+
 # Other Targets
 clean:
-	-$(RM) DiscoveryF0.elf DiscoveryF0.list DiscoveryF0.map default.size.stdout
+	-$(RM) DiscoveryF0.bin DiscoveryF0.elf DiscoveryF0.hex DiscoveryF0.list DiscoveryF0.map default.size.stdout
 	-@echo ' '
 
-secondary-outputs: $(SIZE_OUTPUT) $(OBJDUMP_LIST)
+secondary-outputs: $(SIZE_OUTPUT) $(OBJDUMP_LIST) $(OBJCOPY_HEX) $(OBJCOPY_BIN)
 
 fail-specified-linker-script-missing:
 	@echo 'Error: Cannot find the specified linker script. Check the linker settings in the build configuration.'
