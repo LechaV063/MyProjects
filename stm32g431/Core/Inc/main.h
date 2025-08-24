@@ -58,10 +58,32 @@ void Error_Handler(void);
 
 /* Private defines -----------------------------------------------------------*/
 #define Button_Pin GPIO_PIN_0
-#define Button_GPIO_Port GPIOB
+#define Button_GPIO_Port GPIOA
 #define Button_EXTI_IRQn EXTI0_IRQn
-#define LED_Pin GPIO_PIN_1
-#define LED_GPIO_Port GPIOB
+#define A_Pin GPIO_PIN_0
+#define A_GPIO_Port GPIOB
+#define B_Pin GPIO_PIN_1
+#define B_GPIO_Port GPIOB
+#define C_Pin GPIO_PIN_2
+#define C_GPIO_Port GPIOB
+#define CB10_Pin GPIO_PIN_10
+#define CB10_GPIO_Port GPIOB
+#define _D3_Pin GPIO_PIN_13
+#define _D3_GPIO_Port GPIOB
+#define _D2_Pin GPIO_PIN_14
+#define _D2_GPIO_Port GPIOB
+#define _D1_Pin GPIO_PIN_15
+#define _D1_GPIO_Port GPIOB
+#define D_Pin GPIO_PIN_3
+#define D_GPIO_Port GPIOB
+#define E_Pin GPIO_PIN_4
+#define E_GPIO_Port GPIOB
+#define F_Pin GPIO_PIN_5
+#define F_GPIO_Port GPIOB
+#define G_Pin GPIO_PIN_6
+#define G_GPIO_Port GPIOB
+#define DPoint_Pin GPIO_PIN_7
+#define DPoint_GPIO_Port GPIOB
 
 /* USER CODE BEGIN Private defines */
 

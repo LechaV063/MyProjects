@@ -42,7 +42,8 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-volatile uint8_t blinked = 0;
+volatile uint16_t counter = 0;
+volatile uint32_t myTick = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -85,9 +86,9 @@ int main(void)
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
-  MX_GPIO_Init();
+//  MX_GPIO_Init();
   /* USER CODE BEGIN 2 */
-  init_led(LED_GPIO_Port, LED_Pin);
+  setup();
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -155,11 +156,13 @@ static void MX_GPIO_Init(void)
   /* USER CODE END MX_GPIO_Init_1 */
 
   /* GPIO Ports Clock Enable */
-  __HAL_RCC_GPIOB_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
+  __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOB, A_Pin|B_Pin|C_Pin|CB10_Pin
+                          |_D3_Pin|_D2_Pin|_D1_Pin|D_Pin
+                          |E_Pin|F_Pin|G_Pin|DPoint_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin : Button_Pin */
   GPIO_InitStruct.Pin = Button_Pin;
@@ -167,12 +170,16 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(Button_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : LED_Pin */
-//  GPIO_InitStruct.Pin = LED_Pin;
-//  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-//  GPIO_InitStruct.Pull = GPIO_NOPULL;
-//  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-//  HAL_GPIO_Init(LED_GPIO_Port, &GPIO_InitStruct);
+  /*Configure GPIO pins : A_Pin B_Pin C_Pin CB10_Pin
+                           _D3_Pin _D2_Pin _D1_Pin D_Pin
+                           E_Pin F_Pin G_Pin DPoint_Pin */
+  GPIO_InitStruct.Pin = A_Pin|B_Pin|C_Pin|CB10_Pin
+                          |_D3_Pin|_D2_Pin|_D1_Pin|D_Pin
+                          |E_Pin|F_Pin|G_Pin|DPoint_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
   /* EXTI interrupt init*/
   HAL_NVIC_SetPriority(EXTI0_IRQn, 2, 0);

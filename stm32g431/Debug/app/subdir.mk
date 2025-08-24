@@ -5,13 +5,16 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
-../app/gpio.c 
+../app/gpio.c \
+../app/seg7.c 
 
 OBJS += \
-./app/gpio.o 
+./app/gpio.o \
+./app/seg7.o 
 
 C_DEPS += \
-./app/gpio.d 
+./app/gpio.d \
+./app/seg7.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes
@@ -21,7 +24,7 @@ app/%.o app/%.su app/%.cyclo: ../app/%.c app/subdir.mk
 clean: clean-app
 
 clean-app:
-	-$(RM) ./app/gpio.cyclo ./app/gpio.d ./app/gpio.o ./app/gpio.su
+	-$(RM) ./app/gpio.cyclo ./app/gpio.d ./app/gpio.o ./app/gpio.su ./app/seg7.cyclo ./app/seg7.d ./app/seg7.o ./app/seg7.su
 
 .PHONY: clean-app
 

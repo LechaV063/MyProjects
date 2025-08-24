@@ -1,0 +1,3 @@
+../app/seg7.c:25:6:display_symbol	16	static
+../app/seg7.c:40:6:dark_all	8	static
+../app/seg7.c:46:6:display	24	static
