@@ -13,6 +13,8 @@ uint32_t myTick = 0;
 void init_led(GPIO_TypeDef* port, uint16_t pin)
 {
 	  /*Configure GPIO pin : LED_Pin */
+	__HAL_RCC_GPIOA_CLK_ENABLE();
+	  HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_RESET);
 	GPIO_InitTypeDef GPIO_InitStruct = {0};
 	  GPIO_InitStruct.Pin = pin;
 	  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
