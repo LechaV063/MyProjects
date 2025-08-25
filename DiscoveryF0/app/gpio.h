@@ -10,8 +10,8 @@
 
 #include "main.h"
 
-#define DARKTIME 950
-#define FLASHTIME 50
+#define DARKTIME 900
+#define FLASHTIME 100
 #define LedOn 1
 #define LedOff 0
 void loop();

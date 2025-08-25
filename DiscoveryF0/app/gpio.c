@@ -14,7 +14,7 @@ uint32_t myTick = 0;
 
 void init_led(GPIO_TypeDef* port, uint16_t pin)
 {
-
+	__HAL_RCC_GPIOC_CLK_ENABLE();
 	HAL_GPIO_WritePin(GPIOC, BlueLED_Pin|GreenLED_Pin, GPIO_PIN_RESET);
 	  /*Configure GPIO pin : LED_Pin */
 	GPIO_InitTypeDef GPIO_InitStruct = {0};
