@@ -59,10 +59,12 @@ void Error_Handler(void);
 /* Private defines -----------------------------------------------------------*/
 #define BlueButton_Pin GPIO_PIN_13
 #define BlueButton_GPIO_Port GPIOC
+#define RedLED_Pin GPIO_PIN_0
+#define RedLED_GPIO_Port GPIOC
+#define YellowLED_Pin GPIO_PIN_1
+#define YellowLED_GPIO_Port GPIOC
 #define CS_Pin GPIO_PIN_4
 #define CS_GPIO_Port GPIOA
-#define LED_Pin GPIO_PIN_5
-#define LED_GPIO_Port GPIOA
 #define TMS_Pin GPIO_PIN_13
 #define TMS_GPIO_Port GPIOA
 #define TCK_Pin GPIO_PIN_14

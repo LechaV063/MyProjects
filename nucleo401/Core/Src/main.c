@@ -96,7 +96,7 @@ int main(void)
   /* USER CODE BEGIN 2 */
 
   uint8_t rxBuffer[16] = {0};
-  uint8_t txBuffer[] = "Hello world!";
+  uint8_t txBuffer[] = "Nucleo-F401";
   uint32_t myTick = 0;
   /* USER CODE END 2 */
 
@@ -104,19 +104,18 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  if (HAL_GetTick() - myTick > 1000)
+	  if (HAL_GetTick() - myTick > 200)
 	  {
-//		  HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
 		  myTick = HAL_GetTick();
 		  HAL_SPI_Receive_IT(&hspi2, rxBuffer, sizeof(txBuffer));
 		  HAL_GPIO_WritePin(CS_GPIO_Port, CS_Pin, 0);
 		  HAL_SPI_Transmit(&hspi1, txBuffer, sizeof(txBuffer), 1);
+		  HAL_GPIO_TogglePin(RedLED_GPIO_Port, RedLED_Pin); // transmit complete
 		  HAL_GPIO_WritePin(CS_GPIO_Port, CS_Pin, 1);
-//		  HAL_Delay(200);
 	  }
 	  if (flag)
 	  {
-		  HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
+		  HAL_GPIO_TogglePin(YellowLED_GPIO_Port, YellowLED_Pin); //receive complete
 		  flag = 0;
 	  }
 
@@ -191,7 +190,7 @@ static void MX_SPI1_Init(void)
   hspi1.Init.CLKPolarity = SPI_POLARITY_LOW;
   hspi1.Init.CLKPhase = SPI_PHASE_1EDGE;
   hspi1.Init.NSS = SPI_NSS_SOFT;
-  hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_4;
+  hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_2;
   hspi1.Init.FirstBit = SPI_FIRSTBIT_MSB;
   hspi1.Init.TIMode = SPI_TIMODE_DISABLE;
   hspi1.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
@@ -261,7 +260,10 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, CS_Pin|LED_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOC, RedLED_Pin|YellowLED_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(CS_GPIO_Port, CS_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin : BlueButton_Pin */
   GPIO_InitStruct.Pin = BlueButton_Pin;
@@ -269,12 +271,19 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(BlueButton_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : CS_Pin LED_Pin */
-  GPIO_InitStruct.Pin = CS_Pin|LED_Pin;
+  /*Configure GPIO pins : RedLED_Pin YellowLED_Pin */
+  GPIO_InitStruct.Pin = RedLED_Pin|YellowLED_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : CS_Pin */
+  GPIO_InitStruct.Pin = CS_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(CS_GPIO_Port, &GPIO_InitStruct);
 
   /* USER CODE BEGIN MX_GPIO_Init_2 */
 
