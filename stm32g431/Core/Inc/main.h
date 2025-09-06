@@ -57,6 +57,12 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define rxLED_Pin GPIO_PIN_0
+#define rxLED_GPIO_Port GPIOA
+#define txLED_Pin GPIO_PIN_1
+#define txLED_GPIO_Port GPIOA
+#define SS_Pin GPIO_PIN_4
+#define SS_GPIO_Port GPIOA
 
 /* USER CODE BEGIN Private defines */
 
