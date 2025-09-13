@@ -1,3 +1,0 @@
-../app/gpio.c:13:6:init_led	40	static
-../app/gpio.c:26:6:HAL_GPIO_EXTI_Callback	16	static
-../app/gpio.c:32:6:loop	8	static
