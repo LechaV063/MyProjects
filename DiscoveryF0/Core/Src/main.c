@@ -111,7 +111,7 @@ int main(void)
 	      //		была нажата кнопка и дребезг прошёл
 	      if (keyPressed && prevButtonState == HAL_GPIO_ReadPin(BlueBtn_GPIO_Port, BlueBtn_Pin))
 	      {
-	        //			отправляем на Ардуино хронимый статус светодиода
+	        //			отправляем на Ардуино хранимый статус светодиода
 	        if (ledState)
 	        {
 	          HAL_UART_Transmit(&huart1, (uint8_t *)onMessage, strlen(onMessage), 10);
@@ -128,7 +128,7 @@ int main(void)
 	           HAL_GPIO_WritePin(GPIOC, LedBlue_Pin, GPIO_PIN_RESET);
 #endif
 	        }
-	        //			переключаем хронимый статус светодиода
+	        //			переключаем хранимый статус светодиода
 	        ledState = !ledState;
 	        keyPressed = 0;
 	      }
