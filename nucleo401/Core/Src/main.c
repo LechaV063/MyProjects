@@ -45,9 +45,7 @@ UART_HandleTypeDef huart1;
 /* USER CODE BEGIN PV */
 volatile uint16_t keyPressed = 0;
 volatile uint32_t myTick = 0;
-uint8_t rxBuffer[BUFFER_SIZE] = {
-    0,
-};
+uint8_t rxBuffer[BUFFER_SIZE] = {0,};
 uint16_t length = 0;
 /* USER CODE END PV */
 
