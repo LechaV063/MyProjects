@@ -31,7 +31,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-
+#define BUFFER_SIZE (20)
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -45,10 +45,8 @@ UART_HandleTypeDef huart1;
 /* USER CODE BEGIN PV */
 volatile uint16_t keyPressed = 0;
 volatile uint32_t myTick = 0;
-volatile uint16_t msgReceived = 0;
-#define BUFFER_SIZE (20)
-volatile char rxBuffer[BUFFER_SIZE] = {0,};
-volatile uint16_t length = 0;
+uint8_t rxBuffer[BUFFER_SIZE] = {0,};
+uint16_t length = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -95,51 +93,56 @@ int main(void)
   MX_GPIO_Init();
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
+  //  Запуск приёма на USART1 до заполнения буфера или получения статуса IDLE
   HAL_UARTEx_ReceiveToIdle_IT(&huart1, (uint8_t *)rxBuffer, BUFFER_SIZE);
-//  uint16_t prevButtonState = 0;
-//  uint8_t ledState = 0;
-//  uint32_t debounce = 100;
-//  char * onMessage = "B\n";
-//  char * offMessage= "b\n";
+  char * onMessage = "B\n"; 	// сообщение для ВКЛ  светодиода
+  char * offMessage= "b\n"; 	// сообщение для ВЫКЛ светодиода
+  uint16_t prevButtonState = 0;	// статус кнопки до антидребезговой паузы
+  uint8_t ledState = 0;			// статус светодиода
+  uint32_t debounce = 50;		// антидребезговая пауза в мс
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-//	if ((HAL_GetTick()-myTick > debounce))
-//		{
-//		if (keyPressed && prevButtonState == HAL_GPIO_ReadPin(Button_GPIO_Port, Button_Pin))
-//			{
-//				if (ledState)
-//				{
-//					HAL_UART_Transmit(&huart1, (uint8_t *) onMessage, strlen(onMessage), 10);
+	if ((HAL_GetTick()-myTick > debounce))
+		{
+//		была нажата кнопка и дребезг прошёл
+		if (keyPressed && prevButtonState == HAL_GPIO_ReadPin(Button_GPIO_Port, Button_Pin))
+			{
+//			отправляем на Ардуино хронимый статус светодиода
+				if (ledState)
+				{
+					HAL_UART_Transmit(&huart1, (uint8_t *) onMessage, strlen(onMessage), 10);
+//	-- убрать после отладки --
 //					HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_SET);
-//				}
-//				else
-//				{
-//					HAL_UART_Transmit(&huart1, (uint8_t *) offMessage,  strlen(offMessage), 10);
+				}
+				else
+				{
+					HAL_UART_Transmit(&huart1, (uint8_t *) offMessage,  strlen(offMessage), 10);
+//	-- убрать после отладки --
 //					HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_RESET);
-//				}
-//				ledState = ! ledState;
-//				keyPressed = 0;
-//			}
-//		myTick = HAL_GetTick();
-//		prevButtonState = HAL_GPIO_ReadPin(Button_GPIO_Port, Button_Pin);
-//		}
-//	if (msgReceived)
-//		{
-//		if(strncmp("A\n", rxBuffer, 2) == 0)
-//			{
-//				HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_SET);
-//			}
-//		else if (strncmp("a\n", rxBuffer, 2) == 0)
-//			{
-//				HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_RESET);
-//			}
-//		msgReceived = 0;
-//		HAL_UARTEx_ReceiveToIdle_IT(&huart1, (uint8_t *)rxBuffer, sizeof(rxBuffer));
-//		}
+				}
+//			переключаем хронимый статус светодиода
+				ledState = ! ledState;
+				keyPressed = 0;
+			}
+		myTick = HAL_GetTick();
+		prevButtonState = HAL_GPIO_ReadPin(Button_GPIO_Port, Button_Pin);
+		}
+	  if (length > 0){
+//		  Обработка сообщения от Ардуино
+		  if(strncmp("A\n", (char *) rxBuffer, 2) == 0) {
+			  HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, 1);
+		  } else if (strncmp("a\n", (char *) rxBuffer, 2) == 0)
+		  {
+			  HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, 0);
+		  }
+//		  Перезапускаем приём
+		  length = 0;
+		  HAL_UARTEx_ReceiveToIdle_IT(&huart1, rxBuffer, BUFFER_SIZE);
+	  }
 	/* USER CODE END WHILE */
 
 	/* USER CODE BEGIN 3 */
@@ -265,10 +268,9 @@ static void MX_GPIO_Init(void)
 void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t Size){
 	if (huart == &huart1)
 	{
-//		msgReceived = 1;
 		length = Size;
-		HAL_UART_Transmit(&huart1, (uint8_t *)rxBuffer, length, 100);
-		HAL_UARTEx_ReceiveToIdle_IT(&huart1, (uint8_t *)rxBuffer, BUFFER_SIZE);
+		// Отправка эхо. Убрать после отладки
+		// HAL_UART_Transmit(&huart1, (uint8_t *)rxBuffer, length, 10);
 	}
 }
 
