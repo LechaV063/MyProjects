@@ -1,20 +1,20 @@
 /* USER CODE BEGIN Header */
 /**
-  ******************************************************************************
-  * @file           : main.c
-  * @brief          : Main program body
-  ******************************************************************************
-  * @attention
-  *
-  * Copyright (c) 2025 STMicroelectronics.
-  * All rights reserved.
-  *
-  * This software is licensed under terms that can be found in the LICENSE file
-  * in the root directory of this software component.
-  * If no LICENSE file comes with this software, it is provided AS-IS.
-  *
-  ******************************************************************************
-  */
+ ******************************************************************************
+ * @file           : main.c
+ * @brief          : Main program body
+ ******************************************************************************
+ * @attention
+ *
+ * Copyright (c) 2025 STMicroelectronics.
+ * All rights reserved.
+ *
+ * This software is licensed under terms that can be found in the LICENSE file
+ * in the root directory of this software component.
+ * If no LICENSE file comes with this software, it is provided AS-IS.
+ *
+ ******************************************************************************
+ */
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
@@ -45,7 +45,9 @@ UART_HandleTypeDef huart1;
 /* USER CODE BEGIN PV */
 volatile uint16_t keyPressed = 0;
 volatile uint32_t myTick = 0;
-uint8_t rxBuffer[BUFFER_SIZE] = {0,};
+uint8_t rxBuffer[BUFFER_SIZE] = {
+    0,
+};
 uint16_t length = 0;
 /* USER CODE END PV */
 
@@ -63,9 +65,9 @@ static void MX_USART1_UART_Init(void);
 /* USER CODE END 0 */
 
 /**
-  * @brief  The application entry point.
-  * @retval int
-  */
+ * @brief  The application entry point.
+ * @retval int
+ */
 int main(void)
 {
 
@@ -94,54 +96,57 @@ int main(void)
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
   HAL_UARTEx_ReceiveToIdle_IT(&huart1, (uint8_t *)rxBuffer, BUFFER_SIZE);
-  char * onMessage = "B\n"; 	// сообщение для ВКЛ  светодиода
-  char * offMessage= "b\n"; 	// сообщение для ВЫКЛ светодиода
-  uint16_t prevButtonState = 0;	// статус кнопки до антидребезговой паузы
-  uint8_t ledState = 0;			// статус светодиода
-  uint32_t debounce = 50;		// антидребезговая пауза в мс
+  char *onMessage = "B\n";      // сообщение для ВКЛ  светодиода
+  char *offMessage = "b\n";     // сообщение для ВЫКЛ светодиода
+  uint16_t prevButtonState = 0; // статус кнопки до антидребезговой паузы
+  uint8_t ledState = 0;         // статус светодиода
+  uint32_t debounce = 50;       // антидребезговая пауза в мс
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	if ((HAL_GetTick()-myTick > debounce))
-		{
-//		была нажата кнопка и дребезг прошёл
-		if (keyPressed && prevButtonState == HAL_GPIO_ReadPin(BlueButton_GPIO_Port, BlueButton_Pin))
-			{
-//			отправляем на Ардуино хронимый статус светодиода
-				if (ledState)
-				{
-					HAL_UART_Transmit(&huart1, (uint8_t *) onMessage, strlen(onMessage), 10);
-//	-- убрать после отладки --
-					HAL_GPIO_WritePin(GreenLed_GPIO_Port, GreenLed_Pin, GPIO_PIN_SET);
-				}
-				else
-				{
-					HAL_UART_Transmit(&huart1, (uint8_t *) offMessage,  strlen(offMessage), 10);
-//	-- убрать после отладки --
-					HAL_GPIO_WritePin(GreenLed_GPIO_Port, GreenLed_Pin, GPIO_PIN_RESET);
-				}
-//			переключаем хронимый статус светодиода
-				ledState = ! ledState;
-				keyPressed = 0;
-			}
-		myTick = HAL_GetTick();
-		prevButtonState = HAL_GPIO_ReadPin(BlueButton_GPIO_Port, BlueButton_Pin);
-		}
-	  if (length > 0){
-//		  Обработка сообщения от Ардуино
-		  if(strncmp("A\n", (char *) rxBuffer, 2) == 0) {
-			  HAL_GPIO_WritePin(GreenLed_GPIO_Port, GreenLed_Pin, 1);
-		  } else if (strncmp("a\n", (char *) rxBuffer, 2) == 0)
-		  {
-			  HAL_GPIO_WritePin(GreenLed_GPIO_Port, GreenLed_Pin, 0);
-		  }
-//		  Перезапускаем приём
-		  length = 0;
-		  HAL_UARTEx_ReceiveToIdle_IT(&huart1, rxBuffer, BUFFER_SIZE);
-	  }
+    if ((HAL_GetTick() - myTick > debounce))
+    {
+      //		была нажата кнопка и дребезг прошёл
+      if (keyPressed && prevButtonState == HAL_GPIO_ReadPin(BlueButton_GPIO_Port, BlueButton_Pin))
+      {
+        //			отправляем на Ардуино хронимый статус светодиода
+        if (ledState)
+        {
+          HAL_UART_Transmit(&huart1, (uint8_t *)onMessage, strlen(onMessage), 10);
+          //	-------- убрать после отладки ---------
+          // HAL_GPIO_WritePin(GreenLed_GPIO_Port, GreenLed_Pin, GPIO_PIN_SET);
+        }
+        else
+        {
+          HAL_UART_Transmit(&huart1, (uint8_t *)offMessage, strlen(offMessage), 10);
+          //	-------- убрать после отладки ---------
+          // HAL_GPIO_WritePin(GreenLed_GPIO_Port, GreenLed_Pin, GPIO_PIN_RESET);
+        }
+        //			переключаем хронимый статус светодиода
+        ledState = !ledState;
+        keyPressed = 0;
+      }
+      myTick = HAL_GetTick();
+      prevButtonState = HAL_GPIO_ReadPin(BlueButton_GPIO_Port, BlueButton_Pin);
+    }
+    if (length > 0)
+    {
+      //		  Обработка сообщения от Ардуино
+      if (strncmp("A\n", (char *)rxBuffer, 2) == 0)
+      {
+        HAL_GPIO_WritePin(GreenLed_GPIO_Port, GreenLed_Pin, 1);
+      }
+      else if (strncmp("a\n", (char *)rxBuffer, 2) == 0)
+      {
+        HAL_GPIO_WritePin(GreenLed_GPIO_Port, GreenLed_Pin, 0);
+      }
+      //		  Перезапускаем приём
+      length = 0;
+      HAL_UARTEx_ReceiveToIdle_IT(&huart1, rxBuffer, BUFFER_SIZE);
+    }
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -150,22 +155,22 @@ int main(void)
 }
 
 /**
-  * @brief System Clock Configuration
-  * @retval None
-  */
+ * @brief System Clock Configuration
+ * @retval None
+ */
 void SystemClock_Config(void)
 {
   RCC_OscInitTypeDef RCC_OscInitStruct = {0};
   RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
 
   /** Configure the main internal regulator output voltage
-  */
+   */
   __HAL_RCC_PWR_CLK_ENABLE();
   __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE2);
 
   /** Initializes the RCC Oscillators according to the specified parameters
-  * in the RCC_OscInitTypeDef structure.
-  */
+   * in the RCC_OscInitTypeDef structure.
+   */
   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
   RCC_OscInitStruct.HSEState = RCC_HSE_BYPASS;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
@@ -180,9 +185,8 @@ void SystemClock_Config(void)
   }
 
   /** Initializes the CPU, AHB and APB buses clocks
-  */
-  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
-                              |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
+   */
+  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2;
   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV2;
@@ -195,10 +199,10 @@ void SystemClock_Config(void)
 }
 
 /**
-  * @brief USART1 Initialization Function
-  * @param None
-  * @retval None
-  */
+ * @brief USART1 Initialization Function
+ * @param None
+ * @retval None
+ */
 static void MX_USART1_UART_Init(void)
 {
 
@@ -224,14 +228,13 @@ static void MX_USART1_UART_Init(void)
   /* USER CODE BEGIN USART1_Init 2 */
 
   /* USER CODE END USART1_Init 2 */
-
 }
 
 /**
-  * @brief GPIO Initialization Function
-  * @param None
-  * @retval None
-  */
+ * @brief GPIO Initialization Function
+ * @param None
+ * @retval None
+ */
 static void MX_GPIO_Init(void)
 {
   GPIO_InitTypeDef GPIO_InitStruct = {0};
@@ -270,29 +273,30 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t Size){
-	if (huart == &huart1)
-	{
-		length = Size;
-		// Отправка эхо. Убрать после отладки
-		 HAL_UART_Transmit(&huart1, (uint8_t *)rxBuffer, length, 10);
-//		 HAL_UARTEx_ReceiveToIdle_IT(&huart1, rxBuffer, BUFFER_SIZE);
-	}
+void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t Size)
+{
+  if (huart == &huart1)
+  {
+    length = Size;
+    //  ------- Отправка эхо. Убрать после отладки ----------
+    //  HAL_UART_Transmit(&huart1, (uint8_t *)rxBuffer, length, 10);
+    //	HAL_UARTEx_ReceiveToIdle_IT(&huart1, rxBuffer, BUFFER_SIZE);
+  }
 }
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
-	if (GPIO_Pin == BlueButton_Pin)
-	{
-		keyPressed = 1;
-	}
+  if (GPIO_Pin == BlueButton_Pin)
+  {
+    keyPressed = 1;
+  }
 }
 /* USER CODE END 4 */
 
 /**
-  * @brief  This function is executed in case of error occurrence.
-  * @retval None
-  */
+ * @brief  This function is executed in case of error occurrence.
+ * @retval None
+ */
 void Error_Handler(void)
 {
   /* USER CODE BEGIN Error_Handler_Debug */
@@ -305,12 +309,12 @@ void Error_Handler(void)
 }
 #ifdef USE_FULL_ASSERT
 /**
-  * @brief  Reports the name of the source file and the source line number
-  *         where the assert_param error has occurred.
-  * @param  file: pointer to the source file name
-  * @param  line: assert_param error line source number
-  * @retval None
-  */
+ * @brief  Reports the name of the source file and the source line number
+ *         where the assert_param error has occurred.
+ * @param  file: pointer to the source file name
+ * @param  line: assert_param error line source number
+ * @retval None
+ */
 void assert_failed(uint8_t *file, uint32_t line)
 {
   /* USER CODE BEGIN 6 */
