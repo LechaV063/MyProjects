@@ -44,7 +44,9 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-
+uint32_t usb_recv_flag = 0;
+uint8_t txBuffer[128] = {0,};
+uint8_t rxBuffer[128] = {0,};
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -90,8 +92,8 @@ int main(void)
   MX_GPIO_Init();
   MX_USB_Device_Init();
   /* USER CODE BEGIN 2 */
-  uint8_t txBuffer[64] = {0,};
-  uint8_t rxBuffer[64] = {0,};
+  char cmd_toggle_led[] = "toggle";
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -99,12 +101,21 @@ int main(void)
   while (1)
   {
 	  static uint32_t ts = 0;
-	  if (HAL_GetTick() - ts >= 10000){
-		  ts = HAL_GetTick();
-		  sprintf((char *)txBuffer, "CPU Tick: %lu sec\n", HAL_GetTick()/1000);
-		  CDC_Transmit_FS(txBuffer, strlen((char *)txBuffer));
-	  }
-
+	  if (HAL_GetTick() - ts >= 10000)
+		  {
+			  ts = HAL_GetTick();
+			  sprintf((char *)txBuffer, "CPU Tick: %lu sec\n", HAL_GetTick()/1000);
+			  CDC_Transmit_FS(txBuffer, strlen((char *)txBuffer));
+		  }
+	  if ( usb_recv_flag > 0 )
+		  {
+			  if( ! strncmp((char *)rxBuffer, cmd_toggle_led, strlen(cmd_toggle_led) ))
+				  {
+					  HAL_GPIO_TogglePin (LED_GPIO_Port, LED_Pin);
+					  sprintf ((char *)rxBuffer, "Led state: %d", HAL_GPIO_ReadPin(LED_GPIO_Port, LED_Pin));
+					  CDC_Transmit_FS (rxBuffer, strlen ((char *)rxBuffer));
+				  }
+		  }
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -174,14 +185,14 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOA_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_SET);
 
-  /*Configure GPIO pin : PA6 */
-  GPIO_InitStruct.Pin = GPIO_PIN_6;
+  /*Configure GPIO pin : LED_Pin */
+  GPIO_InitStruct.Pin = LED_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_OD;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+  HAL_GPIO_Init(LED_GPIO_Port, &GPIO_InitStruct);
 
   /* USER CODE BEGIN MX_GPIO_Init_2 */
 
