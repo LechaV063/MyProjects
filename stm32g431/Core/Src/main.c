@@ -112,7 +112,7 @@ int main(void)
 			  if( ! strncmp((char *)rxBuffer, cmd_toggle_led, strlen(cmd_toggle_led) ))
 				  {
 					  HAL_GPIO_TogglePin (LED_GPIO_Port, LED_Pin);
-					  sprintf ((char *)rxBuffer, "Led state: %d", HAL_GPIO_ReadPin(LED_GPIO_Port, LED_Pin));
+					  sprintf ((char *)rxBuffer, "Led state: %d\n", HAL_GPIO_ReadPin(LED_GPIO_Port, LED_Pin));
 					  CDC_Transmit_FS (rxBuffer, strlen ((char *)rxBuffer));
 				  }
 		  }
