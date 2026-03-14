@@ -6,7 +6,6 @@
  */
 
 #include <seg7.h>
-uint8_t digit = 0;
 extern uint32_t myTick;
 //7seg знакогенератор 
 uint16_t digits[10] = {
@@ -48,20 +47,23 @@ void dark_all()
 //  функция display - отображает число value 
 void display(int value)
 {
-	  uint8_t digit[3] = {0};
+	  uint8_t digit[3] = {0,};
 	  static int current_digit = 1;
-	  for (int i = 2; i > 0; i--)
+//	  раскладываем цисло value по массиву цифр digit[]
+	  for (int i = 2; i >= 0; i--)
 		  {
 			digit[i] = value % 10;
 			value = value / 10;
 		  }
 		if(HAL_GetTick() - myTick < LIGHTTIME)
 		{
+//			отображаем текущую цифру пока не превышено время свечения
 			display_symbol(digit[current_digit - 1], current_digit);
 
 		} else {
+//			переходим к следующей цифре
 			myTick = HAL_GetTick();
-			(current_digit==3) ? current_digit = 0 : current_digit++;
+			(current_digit==3) ? current_digit = 1: current_digit++;
 			dark_all();
 		}
 

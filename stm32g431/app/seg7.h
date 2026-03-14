@@ -10,7 +10,7 @@
 #include "main.h"
 
 #define DispPort GPIOB
-#define LIGHTTIME 2
+#define LIGHTTIME 4 // время свечения 1-го разряда индикатора
 
 void display_symbol(int symbol, int decimal_place); //
 void display(int value);

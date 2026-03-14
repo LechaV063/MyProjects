@@ -16,13 +16,13 @@ void init_led(GPIO_TypeDef* port, uint16_t pin)
 {
 	GPIO_InitTypeDef GPIO_InitStruct = {0};
 	__HAL_RCC_GPIOB_CLK_ENABLE();
-	  /*Configure GPIO pins : A_Pin B_Pin C_Pin CB10_Pin
+	  /*Configure GPIO pins : A_Pin B_Pin C_Pin
 	                           _D3_Pin _D2_Pin _D1_Pin D_Pin
 	                           E_Pin F_Pin G_Pin DPoint_Pin */
-	  HAL_GPIO_WritePin(GPIOB, A_Pin|B_Pin|C_Pin|CB10_Pin
+	  HAL_GPIO_WritePin(port, A_Pin|B_Pin|C_Pin
 	                          |_D3_Pin|_D2_Pin|_D1_Pin|D_Pin
 	                          |E_Pin|F_Pin|G_Pin|DPoint_Pin, GPIO_PIN_RESET);
-	  GPIO_InitStruct.Pin = A_Pin|B_Pin|C_Pin|CB10_Pin
+	  GPIO_InitStruct.Pin = A_Pin|B_Pin|C_Pin
 	                          |_D3_Pin|_D2_Pin|_D1_Pin|D_Pin
 	                          |E_Pin|F_Pin|G_Pin|DPoint_Pin;
 	  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
@@ -48,7 +48,7 @@ void init_Button(GPIO_TypeDef* port,uint16_t pin)
 
 void setup()
 {
-	  init_led(GPIOB, A_Pin|B_Pin|C_Pin|CB10_Pin
+	  init_led(GPIOB, A_Pin|B_Pin|C_Pin
 	          |_D3_Pin|_D2_Pin|_D1_Pin|D_Pin
 	          |E_Pin|F_Pin|G_Pin|DPoint_Pin);
 	  init_Button(Button_GPIO_Port, Button_Pin);

@@ -48,7 +48,7 @@ volatile uint32_t myTick = 0;
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
-static void MX_GPIO_Init(void);
+//static void MX_GPIO_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -148,47 +148,48 @@ void SystemClock_Config(void)
   * @param None
   * @retval None
   */
-static void MX_GPIO_Init(void)
-{
-  GPIO_InitTypeDef GPIO_InitStruct = {0};
-  /* USER CODE BEGIN MX_GPIO_Init_1 */
-
-  /* USER CODE END MX_GPIO_Init_1 */
-
-  /* GPIO Ports Clock Enable */
-  __HAL_RCC_GPIOA_CLK_ENABLE();
-  __HAL_RCC_GPIOB_CLK_ENABLE();
-
-  /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, A_Pin|B_Pin|C_Pin|CB10_Pin
-                          |_D3_Pin|_D2_Pin|_D1_Pin|D_Pin
-                          |E_Pin|F_Pin|G_Pin|DPoint_Pin, GPIO_PIN_RESET);
-
-  /*Configure GPIO pin : Button_Pin */
-  GPIO_InitStruct.Pin = Button_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(Button_GPIO_Port, &GPIO_InitStruct);
-
-  /*Configure GPIO pins : A_Pin B_Pin C_Pin CB10_Pin
-                           _D3_Pin _D2_Pin _D1_Pin D_Pin
-                           E_Pin F_Pin G_Pin DPoint_Pin */
-  GPIO_InitStruct.Pin = A_Pin|B_Pin|C_Pin|CB10_Pin
-                          |_D3_Pin|_D2_Pin|_D1_Pin|D_Pin
-                          |E_Pin|F_Pin|G_Pin|DPoint_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
-
-  /* EXTI interrupt init*/
-  HAL_NVIC_SetPriority(EXTI0_IRQn, 2, 0);
-  HAL_NVIC_EnableIRQ(EXTI0_IRQn);
-
-  /* USER CODE BEGIN MX_GPIO_Init_2 */
-
-  /* USER CODE END MX_GPIO_Init_2 */
-}
+//static void MX_GPIO_Init(void)
+//{
+//  GPIO_InitTypeDef GPIO_InitStruct = {0};
+//  /* USER CODE BEGIN MX_GPIO_Init_1 */
+//
+//  /* USER CODE END MX_GPIO_Init_1 */
+//
+//  /* GPIO Ports Clock Enable */
+//  __HAL_RCC_GPIOF_CLK_ENABLE();
+//  __HAL_RCC_GPIOB_CLK_ENABLE();
+//  __HAL_RCC_GPIOA_CLK_ENABLE();
+//
+//  /*Configure GPIO pin Output Level */
+//  HAL_GPIO_WritePin(GPIOB, DPoint_Pin|G_Pin|F_Pin|E_Pin
+//                          |D_Pin|C_Pin|B_Pin|A_Pin
+//                          |_D1_Pin|_D2_Pin|_D3_Pin, GPIO_PIN_RESET);
+//
+//  /*Configure GPIO pin : Button_Pin */
+//  GPIO_InitStruct.Pin = Button_Pin;
+//  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
+//  GPIO_InitStruct.Pull = GPIO_NOPULL;
+//  HAL_GPIO_Init(Button_GPIO_Port, &GPIO_InitStruct);
+//
+//  /*Configure GPIO pins : DPoint_Pin G_Pin F_Pin E_Pin
+//                           D_Pin C_Pin B_Pin A_Pin
+//                           _D1_Pin _D2_Pin _D3_Pin */
+//  GPIO_InitStruct.Pin = DPoint_Pin|G_Pin|F_Pin|E_Pin
+//                          |D_Pin|C_Pin|B_Pin|A_Pin
+//                          |_D1_Pin|_D2_Pin|_D3_Pin;
+//  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+//  GPIO_InitStruct.Pull = GPIO_NOPULL;
+//  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+//  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+//
+//  /* EXTI interrupt init*/
+//  HAL_NVIC_SetPriority(EXTI0_IRQn, 2, 0);
+//  HAL_NVIC_EnableIRQ(EXTI0_IRQn);
+//
+//  /* USER CODE BEGIN MX_GPIO_Init_2 */
+//
+//  /* USER CODE END MX_GPIO_Init_2 */
+//}
 
 /* USER CODE BEGIN 4 */
 
