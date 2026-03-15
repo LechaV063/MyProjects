@@ -30,40 +30,6 @@ elf/
 *.hex
 *.axf
 *.elf
-EOFche/ кэшакопии и автосохраненияигнорируйте!сгенерированный CubeMX)
-# Каталоги рабочей среды IDE
-.metadata/
-.settings/
-.cproject
-.project
-
-# Сгенерированные файлы сборки
-Debug/
-Release/
-build/
-obj/
-lst/
-bin/
-elf/
-
-# Временные и служебные файлы IDE
-*.swp
-*.swo
-*.tmp
-*.log
-
-# Файлы отладки и трассировки
-*.gdb_history
-*.trc
-
-# Исполняемые и бинарные файлы
-*.exe
-*.out
-*.bin
-*.hex
-*.axf
-*.elf
-*.map
 
 # Прочие автоматически генерируемые файлы
 *.d
